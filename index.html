@@ -1,0 +1,434 @@
+<!doctype html>
+<html lang="th" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="description" content="เว็บไซต์สอน Roblox Studio พื้นฐาน ปี 2025: เริ่มต้นใช้งาน เขียนสคริปต์เบื้องต้น ออกแบบ UX/UI พร้อมอนิเมชั่นลื่นไหล" />
+  <title>Roblox Studio | 2025</title>
+  <link rel="preconnect" href="https://cdn.jsdelivr.net" crossorigin>
+  <!-- Bootstrap 5 -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Bootstrap Icons -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet">
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+  <style>
+    /* ====== Design Tokens ====== */
+    :root {
+      --bg: #0b0f1a;
+      --bg-soft: #0f1524;
+      --text: #e9eefc;
+      --muted: #a0abc0;
+      --brand: #7c5cff;
+      --brand-2: #00e5ff;
+      --accent: #4ade80;
+      --card: #0d1320cc;
+      --border: #1a2336;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius: 18px;
+      --grad: radial-gradient(1200px 600px at 0% 0%, #1a1040 0%, transparent 60%),
+              radial-gradient(900px 400px at 100% 0%, #002d40 0%, transparent 60%),
+              linear-gradient(180deg, #0b0f1a 0%, #0b0f1a 100%);
+    }
+    [data-theme="light"]:root {
+      --bg: #f7f9fc;
+      --bg-soft: #ffffff;
+      --text: #0c1426;
+      --muted: #5b6b81;
+      --brand: #6a58ff;
+      --brand-2: #00c4e6;
+      --accent: #16a34a;
+      --card: #ffffffcc;
+      --border: #e6eaf2;
+      --shadow: 0 10px 30px rgba(2,6,23,.08);
+      --grad: radial-gradient(1200px 600px at 0% 0%, #e7e4ff 0%, transparent 60%),
+              radial-gradient(900px 400px at 100% 0%, #d7fbff 0%, transparent 60%),
+              linear-gradient(180deg, #f7f9fc 0%, #f7f9fc 100%);
+    }
+
+    /* ====== Global ====== */
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, 'Helvetica Neue', Arial, 'Noto Sans', 'Apple Color Emoji', 'Segoe UI Emoji';
+      color: var(--text);
+      background: var(--grad), var(--bg);
+      background-attachment: fixed;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+    .container-xl { max-width: 1200px; }
+    .glass {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+    }
+    .btn-brand { background: linear-gradient(135deg, var(--brand), var(--brand-2)); border: none; color: #fff; }
+    .btn-brand:hover { filter: brightness(1.1); }
+    .text-gradient { background: linear-gradient(135deg, var(--brand), var(--brand-2)); -webkit-background-clip: text; background-clip: text; color: transparent; }
+    .code { font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace; font-size: .95rem; }
+
+    /* ====== Animations ====== */
+    @keyframes floaty { 0% { transform: translateY(0) } 50% { transform: translateY(-8px) } 100% { transform: translateY(0) } }
+    @keyframes fadeUp { 0% { opacity:0; transform: translateY(20px) } 100% { opacity:1; transform: translateY(0) } }
+    @keyframes glow { 0% { box-shadow: 0 0 0 rgba(124,92,255,0.0) } 100% { box-shadow: 0 0 40px rgba(124,92,255,0.35) } }
+    .reveal { opacity: 0; transform: translateY(18px); transition: opacity .8s ease, transform .8s ease; }
+    .reveal.show { opacity: 1; transform: translateY(0); }
+    .hero-blob { position: absolute; inset: -20% -10% auto auto; width: 55vmax; height: 55vmax; pointer-events: none; filter: blur(60px); opacity: .35; background: radial-gradient(closest-side, var(--brand), transparent 70%); animation: floaty 9s ease-in-out infinite; }
+
+    /* ====== Navbar ====== */
+    .navbar-brand { font-weight: 800; letter-spacing: .5px; }
+    .nav-link { color: var(--text) !important; }
+
+    /* ====== Sections ====== */
+    section { padding: 90px 0; }
+    .section-heading { font-weight: 800; font-size: clamp(28px, 4vw, 42px); }
+    .subheading { color: var(--muted); font-size: 1rem; }
+
+    /* Hero */
+    .hero { position: relative; padding-top: 120px; padding-bottom: 80px; }
+    .hero h1 { font-size: clamp(34px, 6vw, 64px); font-weight: 800; }
+    .hero .lead { color: var(--muted); font-size: clamp(16px, 2.6vw, 20px); }
+
+    /* Cards */
+    .feature-card { transition: transform .4s ease, box-shadow .4s ease; }
+    .feature-card:hover { transform: translateY(-6px); box-shadow: 0 16px 40px rgba(0,0,0,.25); }
+
+    /* Code block */
+    pre { background: #0b1220; border: 1px solid var(--border); color: #e6edf3; border-radius: 14px; padding: 18px; overflow: auto; }
+    [data-theme="light"] pre { background: #f3f6fb; color: #0b1220; }
+
+    /* Footer */
+    footer { border-top: 1px solid var(--border); color: var(--muted); }
+
+    /* Utilities */
+    .icon-badge { display: inline-flex; align-items:center; gap:8px; border:1px solid var(--border); border-radius: 999px; padding: 8px 14px; background: var(--card); }
+    .tag { border: 1px dashed var(--border); border-radius: 999px; padding: 6px 12px; color: var(--muted); font-size:.9rem }
+  </style>
+</head>
+<body>
+  <!-- Navbar -->
+  <nav class="navbar navbar-expand-lg sticky-top glass mt-3 container-xl">
+    <div class="container-fluid">
+      <a class="navbar-brand text-gradient" href="#home"><i class="bi bi-controller"></i> Roblox Studio 101</a>
+      <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#nav" aria-controls="nav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+      <div class="collapse navbar-collapse" id="nav">
+        <ul class="navbar-nav ms-auto mb-2 mb-lg-0">
+          <li class="nav-item"><a class="nav-link" href="#setup">ติดตั้ง</a></li>
+          <li class="nav-item"><a class="nav-link" href="#basics">พื้นฐาน</a></li>
+          <li class="nav-item"><a class="nav-link" href="#scripting">สคริปต์</a></li>
+          <li class="nav-item"><a class="nav-link" href="#uxui">UX/UI</a></li>
+          <li class="nav-item"><a class="nav-link" href="#resources">ทรัพยากร</a></li>
+          <li class="nav-item"><a class="nav-link" href="#faq">FAQ</a></li>
+        </ul>
+        <div class="d-flex gap-2 ms-lg-3">
+          <button id="themeToggle" class="btn btn-outline-light"><i class="bi bi-moon-stars"></i></button>
+          <a href="#setup" class="btn btn-brand">เริ่มเรียน</a>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero -->
+  <section id="home" class="hero container-xl">
+    <div class="hero-blob"></div>
+    <div class="row align-items-center g-4">
+      <div class="col-lg-7">
+        <h1 class="reveal">สร้างเกมแรกของคุณบน <span class="text-gradient">Roblox Studio</span></h1>
+        <p class="lead mt-3 reveal" style="animation-delay:.1s">คู่มือปี 2025 สำหรับผู้เริ่มต้น: ติดตั้งเครื่องมือ รู้จักอินเตอร์เฟซ เขียนสคริปต์เบื้องต้น และออกแบบ UX/UI ที่เล่นแล้วลื่นตา</p>
+        <div class="d-flex gap-3 mt-4 reveal" style="animation-delay:.2s">
+          <a href="#scripting" class="btn btn-brand btn-lg"><i class="bi bi-code"></i> ทดลองสคริปต์</a>
+          <a href="#uxui" class="btn btn-outline-light btn-lg"><i class="bi bi-magic"></i> ดูแนวทาง UI</a>
+        </div>
+        <div class="d-flex gap-2 mt-4 reveal">
+          <span class="icon-badge"><i class="bi bi-lightning"></i> CSS Animation ลื่นไหล</span>
+          <span class="icon-badge"><i class="bi bi-bootstrap"></i> Bootstrap 5 + Icons</span>
+          <span class="icon-badge"><i class="bi bi-device-hdd"></i> พร้อม Deploy</span>
+        </div>
+      </div>
+      <div class="col-lg-5">
+        <div class="glass p-3 p-md-4 reveal" style="animation-delay:.15s">
+          <img alt="Roblox Studio UI illustration" class="w-100 rounded-4" src="https://source.unsplash.com/collection/190727/900x600?sig=25" />
+          <div class="mt-3 small text-muted">ภาพตัวอย่าง UI เกม (placeholder)</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Setup -->
+  <section id="setup" class="container-xl">
+    <div class="row g-4 align-items-stretch">
+      <div class="col-lg-6">
+        <div class="glass p-4 h-100 reveal">
+          <h2 class="section-heading">ติดตั้งและตั้งค่า</h2>
+          <p class="subheading">สิ่งที่ต้องมี: บัญชี Roblox และ Roblox Studio</p>
+          <ol class="mt-3">
+            <li>สมัคร/เข้าสู่ระบบที่ <strong>roblox.com</strong></li>
+            <li>ดาวน์โหลด <strong>Roblox Studio</strong> จากหน้า Create</li>
+            <li>เปิด Studio เลือก <em>Baseplate</em> หรือ <em>Obby Template</em></li>
+            <li>รู้จักแท็บ <em>Explorer</em>, <em>Properties</em>, <em>Output</em>, <em>Toolbox</em></li>
+            <li>กด <span class="tag">Play</span> เพื่อทดสอบ และ <span class="tag">Publish to Roblox</span> เพื่ออัปโหลด</li>
+          </ol>
+          <div class="mt-3">
+            <span class="tag"><i class="bi bi-windows"></i> Windows</span>
+            <span class="tag"><i class="bi bi-apple"></i> macOS</span>
+          </div>
+        </div>
+      </div>
+      <div class="col-lg-6">
+        <div class="glass p-4 h-100 reveal">
+          <h3 class="mb-3"><i class="bi bi-ui-checks-grid"></i> เค้าโครงหน้าต่างหลัก</h3>
+          <div class="row g-3">
+            <div class="col-6">
+              <div class="feature-card glass p-3 h-100">
+                <h5><i class="bi bi-columns-gap"></i> Explorer</h5>
+                <p class="mb-0 text-muted">จัดการวัตถุใน Workspace และ Service ต่าง ๆ</p>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="feature-card glass p-3 h-100">
+                <h5><i class="bi bi-sliders"></i> Properties</h5>
+                <p class="mb-0 text-muted">ปรับค่าของวัตถุ เช่น สี ขนาด วัสดุ</p>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="feature-card glass p-3 h-100">
+                <h5><i class="bi bi-terminal"></i> Output</h5>
+                <p class="mb-0 text-muted">ดูข้อความ <code class="code">print()</code> และ error</p>
+              </div>
+            </div>
+            <div class="col-6">
+              <div class="feature-card glass p-3 h-100">
+                <h5><i class="bi bi-box"></i> Toolbox</h5>
+                <p class="mb-0 text-muted">นำ Asset จาก Marketplace มาใช้</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Basics -->
+  <section id="basics" class="container-xl">
+    <div class="glass p-4 reveal">
+      <h2 class="section-heading">พื้นฐาน Roblox Studio</h2>
+      <p class="subheading">การวางวัตถุ หมุน ปรับสเกล กลุ่ม และการจัดเลเยอร์</p>
+      <div class="row g-4 mt-1">
+        <div class="col-md-4">
+          <div class="feature-card glass p-4 h-100">
+            <i class="bi bi-bounding-box-circles fs-2"></i>
+            <h5 class="mt-2">วางวัตถุ (Parts)</h5>
+            <p class="mb-0">ใช้แท็บ <em>Model</em> เลือก Block, Sphere, Wedge ปรับสีและวัสดุ</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="feature-card glass p-4 h-100">
+            <i class="bi bi-arrows-move fs-2"></i>
+            <h5 class="mt-2">ย้าย/หมุน/สเกล</h5>
+            <p class="mb-0">กด <kbd>R</kbd> หมุนแกน <kbd>T</kbd> สลับ Local/Global ตั้ง Snap ให้แม่นยำ</p>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="feature-card glass p-4 h-100">
+            <i class="bi bi-layers fs-2"></i>
+            <h5 class="mt-2">จัดโครงสร้าง</h5>
+            <p class="mb-0">ตั้งชื่อวัตถุ สร้างโฟลเดอร์ ใช้ <em>Group</em> และ <em>Constraints</em></p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Scripting -->
+  <section id="scripting" class="container-xl">
+    <div class="row g-4">
+      <div class="col-lg-6">
+        <div class="glass p-4 h-100 reveal">
+          <h2 class="section-heading">สคริปต์เบื้องต้น (Luau)</h2>
+          <p class="subheading">เพิ่ม <em>Script</em> ใต้ <em>ServerScriptService</em> หรือ <em>LocalScript</em> ใต้ <em>StarterPlayerScripts</em></p>
+
+<pre><code class="code">-- พิมพ์ข้อความไปที่ Output
+print("สวัสดี Roblox!")
+
+-- ตัวแปรและตาราง
+local speed = 16
+local playerStats = {coins = 0, level = 1}
+
+-- ฟังก์ชัน
+local function reward(player)
+  playerStats.coins += 10
+  print(player.Name .. " ได้รับ 10 เหรียญ")
+end
+
+-- เชื่อมเหตุการณ์เมื่อผู้เล่นเข้ามา
+local Players = game:GetService("Players")
+Players.PlayerAdded:Connect(function(player)
+  print("ยินดีต้อนรับ ", player.Name)
+  reward(player)
+end)
+</code></pre>
+
+          <button class="btn btn-outline-light btn-sm copy-btn" data-copy-target="0"><i class="bi bi-clipboard"></i> คัดลอก</button>
+        </div>
+      </div>
+
+      <div class="col-lg-6">
+        <div class="glass p-4 h-100 reveal">
+          <h3 class="mb-2">โต้ตอบกับวัตถุ</h3>
+<pre><code class="code">-- ทำให้ Part เปลี่ยนสีเมื่อสัมผัส
+local part = workspace:WaitForChild("ColorPad")
+
+part.Touched:Connect(function(hit)
+  local p = hit.Parent
+  if p:FindFirstChild("Humanoid") then
+    part.BrickColor = BrickColor.Random()
+  end
+end)
+</code></pre>
+          <button class="btn btn-outline-light btn-sm copy-btn" data-copy-target="1"><i class="bi bi-clipboard"></i> คัดลอก</button>
+
+          <div class="mt-3 small text-muted">สร้าง Part ชื่อ <code class="code">ColorPad</code> ใน Workspace ก่อนรัน</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- UX/UI Guidelines -->
+  <section id="uxui" class="container-xl">
+    <div class="glass p-4 reveal">
+      <h2 class="section-heading">แนวทาง UX/UI สำหรับ Roblox</h2>
+      <p class="subheading">หลักการที่เน้นเล่นง่าย อ่านง่าย และเฟรมเรตเสถียร</p>
+      <div class="row g-4 mt-1">
+        <div class="col-md-6">
+          <div class="feature-card glass p-4 h-100">
+            <h5><i class="bi bi-eye"></i> การอ่านง่าย</h5>
+            <ul class="mb-0">
+              <li>ใช้ <code>UIStroke</code> รอบตัวอักษรบนพื้นหลังสว่าง</li>
+              <li>ตั้ง <code>UITextSizeConstraint</code> ให้ปรับตามหน้าจอ</li>
+              <li>ใช้สีคู่คอนทราสต์สูงและระวังสีแดง/เขียวร่วมกัน</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="feature-card glass p-4 h-100">
+            <h5><i class="bi bi-speedometer2"></i> ประสิทธิภาพ</h5>
+            <ul class="mb-0">
+              <li>รวม UI เป็น <code>ScreenGui</code> เดียวเพื่อลด draw calls</li>
+              <li>ใช้งาน <em>TweenService</em> สำหรับอนิเมชั่นที่ลื่น</li>
+              <li>โหลดภาพแบบเชิงรุกและใช้ Asset ที่เหมาะกับมือถือ</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="feature-card glass p-4 h-100">
+            <h5><i class="bi bi-emoji-smile"></i> การป้อนข้อมูล</h5>
+            <ul class="mb-0">
+              <li>รองรับคีย์บอร์ด เมาส์ และจอยแพด</li>
+              <li>ปุ่มหลักควรมีขนาดใหญ่พอสำหรับนิ้วโป้ง</li>
+              <li>ให้ Feedback ด้วยเสียง/อนิเมชั่นสั้น ๆ</li>
+            </ul>
+          </div>
+        </div>
+        <div class="col-md-6">
+          <div class="feature-card glass p-4 h-100">
+            <h5><i class="bi bi-vector-pen"></i> สไตล์ภาพ</h5>
+            <ul class="mb-0">
+              <li>โทนสี 2–3 สีหลัก ตั้งเป็น Theme</li>
+              <li>ใช้เงาเบา ๆ และมุมโค้งเพื่อความทันสมัย</li>
+              <li>อย่าแสดง UI เกินจำเป็นบนหน้าจอ</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Resources -->
+  <section id="resources" class="container-xl">
+    <div class="glass p-4 reveal">
+      <h2 class="section-heading">ทรัพยากรที่แนะนำ</h2>
+      <div class="row g-3 mt-1">
+        <div class="col-md-4"><a class="feature-card glass p-3 d-block text-decoration-none text-reset" href="https://create.roblox.com/docs" target="_blank" rel="noopener"><i class="bi bi-journal-code"></i> เอกสารทางการ Roblox</a></div>
+        <div class="col-md-4"><a class="feature-card glass p-3 d-block text-decoration-none text-reset" href="https://devforum.roblox.com/" target="_blank" rel="noopener"><i class="bi bi-people"></i> DevForum ชุมชนนักพัฒนา</a></div>
+        <div class="col-md-4"><a class="feature-card glass p-3 d-block text-decoration-none text-reset" href="https://www.youtube.com/results?search_query=roblox+studio+tutorial" target="_blank" rel="noopener"><i class="bi bi-youtube"></i> วิดีโอสอนบน YouTube</a></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section id="faq" class="container-xl">
+    <div class="glass p-4 reveal">
+      <h2 class="section-heading">คำถามที่พบบ่อย</h2>
+      <div class="accordion" id="faqAcc">
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="q1"><button class="accordion-button" type="button" data-bs-toggle="collapse" data-bs-target="#a1" aria-expanded="true" aria-controls="a1">ต้องเริ่มจากภาษาอะไร?</button></h2>
+          <div id="a1" class="accordion-collapse collapse show" data-bs-parent="#faqAcc"><div class="accordion-body">Roblox ใช้ <strong>Luau</strong> ซึ่งคล้าย Lua เน้นอ่านง่ายและเรียนรู้ไว</div></div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="q2"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#a2" aria-expanded="false" aria-controls="a2">ต่างจาก Unity/Unreal อย่างไร?</button></h2>
+          <div id="a2" class="accordion-collapse collapse" data-bs-parent="#faqAcc"><div class="accordion-body">Roblox เป็นแพลตฟอร์มและมาร์เก็ตในตัว เน้นสร้างและเผยแพร่เร็ว พร้อมระบบผู้เล่นหลายคนโดยค่าเริ่มต้น</div></div>
+        </div>
+        <div class="accordion-item">
+          <h2 class="accordion-header" id="q3"><button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#a3" aria-expanded="false" aria-controls="a3">เผยแพร่อย่างไร?</button></h2>
+          <div id="a3" class="accordion-collapse collapse" data-bs-parent="#faqAcc"><div class="accordion-body">ใช้ <em>File → Publish to Roblox</em> ตั้งค่าสิทธิ์เป็น <em>Public</em> หรือ <em>Friends</em> แล้วแชร์ลิงก์
+          </div></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-4 mt-5">
+    <div class="container-xl d-flex flex-wrap justify-content-between align-items-center gap-2">
+      <div>
+        <span class="me-2">© 2025 Roblox Studio 101</span>
+        <span class="tag">HTML</span>
+        <span class="tag">CSS</span>
+        <span class="tag">Bootstrap</span>
+        <span class="tag">Bootstrap Icons</span>
+      </div>
+      <div class="d-flex gap-3">
+        <a class="text-reset" href="#home"><i class="bi bi-arrow-up-circle"></i> กลับขึ้นบน</a>
+      </div>
+    </div>
+  </footer>
+
+  <!-- Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  <script>
+    // Theme toggle
+    const btn = document.getElementById('themeToggle');
+    const root = document.documentElement;
+    const saved = localStorage.getItem('theme') || 'dark';
+    document.documentElement.setAttribute('data-theme', saved);
+    btn.innerHTML = saved === 'dark' ? '<i class="bi bi-moon-stars"></i>' : '<i class="bi bi-brightness-high"></i>';
+    btn.addEventListener('click', () => {
+      const current = root.getAttribute('data-theme');
+      const next = current === 'dark' ? 'light' : 'dark';
+      root.setAttribute('data-theme', next);
+      localStorage.setItem('theme', next);
+      btn.innerHTML = next === 'dark' ? '<i class="bi bi-moon-stars"></i>' : '<i class="bi bi-brightness-high"></i>';
+    });
+
+    // Reveal on scroll
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(e => { if (e.isIntersecting) { e.target.classList.add('show'); io.unobserve(e.target); } });
+    }, { threshold: 0.18 });
+    document.querySelectorAll('.reveal').forEach(el => io.observe(el));
+
+    // Copy buttons for code blocks
+    document.querySelectorAll('.copy-btn').forEach((btn, idx) => {
+      btn.addEventListener('click', async () => {
+        const blocks = document.querySelectorAll('pre code');
+        const targetIdx = parseInt(btn.getAttribute('data-copy-target'));
+        const text = blocks[targetIdx]?.innerText || '';
+        try { await navigator.clipboard.writeText(text); btn.innerHTML = '<i class="bi bi-check2"></i> คัดลอกแล้ว'; setTimeout(()=> btn.innerHTML = '<i class="bi bi-clipboard"></i> คัดลอก', 1800); } catch(e){}
+      });
+    });
+  </script>
+</body>
+</html>
